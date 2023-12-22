@@ -1,0 +1,19 @@
+id: HeaderValidationProxy
+name: HeaderValidationProxy
+description: Header validation custom policy
+category: Custom
+type: custom
+resourceLevelSupported: true
+encryptionSupported: false
+standalone: true
+requiredCharacteristics: []
+providedCharacteristics: []
+configuration: 
+  - propertyName: xSrcApp
+    name: x-src-app
+    description: Check box if  want to validate x-src-app in headers as null. 
+    type: boolean
+    optional: true
+    sensitive: false
+    allowMultiple: false
+    defaultValue: false
