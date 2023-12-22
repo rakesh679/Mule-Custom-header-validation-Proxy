@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:http-policy="http://www.mulesoft.org/schema/mule/http-policy"
+      xmlns:http-transform="http://www.mulesoft.org/schema/mule/http-policy-transform"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+               http://www.mulesoft.org/schema/mule/http-policy http://www.mulesoft.org/schema/mule/http-policy/current/mule-http-policy.xsd
+               http://www.mulesoft.org/schema/mule/http-policy-transform http://www.mulesoft.org/schema/mule/http-policy-transform/current/mule-http-policy-transform.xsd">
+
+
+    <http-policy:proxy name="{{{policyId}}}-custom-policy">
+        <http-policy:source>
+                    
+                    <set-variable value="{{{xSrcApp}}}"  variableName="xSrcAppFlag"/>
+		<choice>
+			<when expression='#[(vars.xSrcAppFlag != false ) and (!isEmpty(attributes.headers."x-src-app"))]'>
+				<logger level="INFO"  message="Source headers value : #[attributes.headers.'x-src-app']"/>
+				
+			 <http-policy:execute-next/>
+			</when>
+			 <otherwise>
+              <logger message="Avoid Flow execution" />
+              <http-transform:set-response statusCode="401">
+                                <http-transform:body>#[
+                                    output application/json
+                                    ---
+                                    "error": { "code": "401", "reasonPhrase": "required header must be passed"}
+                                    ]</http-transform:body>
+                                
+                            </http-transform:set-response>
+              
+           </otherwise>
+		</choice>
+                    
+            
+        </http-policy:source>
+    </http-policy:proxy>
+</mule>
