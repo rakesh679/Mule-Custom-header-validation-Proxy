@@ -4,7 +4,11 @@ Mule Custom header validation Proxy
 
 
 For Custom policy add below configuration in setting.xml
-1. <profile>
+1.
+```xml
+
+
+ <profile>
      <id>archetype-repository</id>
      <repositories>
        <repository>
